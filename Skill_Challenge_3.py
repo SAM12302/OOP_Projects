@@ -7,33 +7,32 @@ class Contact:
         self.display_mode = display_mode
 
     def __eq__(self, other):
-        if self.email != None and self.phone_number != None:
-            return self.phone_number == other.phone_number or self.email == other.email
-        elif self.name !=None and self.last_name != None:
-            return self.name == other.name or self.last_name == other.last_name
+        if (self.email != None and self.email == other.email) or (self.phone_number != None and self.phone_number == other.phone_number):
+            return True
+        
+        return self.name == other.name and self.last_name == other.last_name
+    
+    @staticmethod
+    def _obfuscate(text):
+        half_length = len(text) // 2
+        return text[:half_length] + '*' * (half_length + 1)
         
     def __repr__(self):
         if self.display_mode == 'masked':
-            string1 = "First Name:" + {self.name[:2]} + '*' * {len(self.name) - 2} + '&' + 'Last name: ' + {self.last_name[:2]} + '*' * {len(self.last_name) - 2}
-            return string1
-        else:
-            string1 = "First Name:" + {self.name} + '& Last Name:' + {self.last_name}
-            return string1
-    
-    def __str__(self):
-        return "" + self.last_name[:len(self.last_name) - 2] + "" + self.name[:len(self.name) - 3]
+            return f"Contact(name ='{self._obfuscate(self.name)}', last_name='{self._obfuscate(self.last_name)}')"
+
+        return f"Contact(name ='{self.name}', last_name='{self.last_name}', phone='{self.phone_number}', email='{self.email}')"
     
     def __format__(self, format_spec):
-        if format_spec == 'masked':
-            pass
-        else:
-            string1 = "First Name: " + {self.name} +' & Last Name:' + {self.last_name}
-            return string1
+        if format_spec != 'masked':
+            return f"Contact(name ='{self.name}', last_name='{self.last_name}', phone='{self.phone_number}', email='{self.email}'"
+
+        return repr(self)
         
 c1 = Contact("Andy", "Bek")
 c2 = Contact("Andy", "Bek", "12345678")
 c3 = Contact("Andy", "Bek", "12345678", 'hey@andybek.com')
-c4 = Contact("Andy", "Bek", "12345678", 'hey@andybek.com', display_mode='show')
+c4 = Contact("Andy", "Bek", "12345678", 'hey@andybek.com', display_mode='unmasked')
 
 print(c1)
 print(c2)
